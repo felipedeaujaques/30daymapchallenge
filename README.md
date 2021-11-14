@@ -1,8 +1,8 @@
-# 30daysmapchallenge
+# [30DayMapChallenge](https://github.com/tjukanovt/30DayMapChallenge)
 
-Link: https://github.com/tjukanovt/30DayMapChallenge
+## 1 - [Points](https://felipedeaujaques.github.io/30daysmapchallenge/Points/qgis2web/index.html)
 
-## 1 - Points
+Map of table tennis locations from OSM
 
 | Data  | Source |
 |---|---|
@@ -22,3 +22,31 @@ out body;
 >;
 out skel qt;
 ```
+
+## 2 - [Lines](https://felipedeaujaques.github.io/30daysmapchallenge/Lines/OSMlinesFFM.png)
+
+Exported OSM line geometries for bbox of central Frankfurt
+
+| Data  | Source |
+|---|---|
+|  Line geometries |  OSM data via https://overpass-turbo.eu/ |
+
+Overpass query:
+
+```
+[out:json][timeout:25];
+(
+  way({{bbox}});
+);
+out body;
+>;
+out skel qt;
+```
+
+## 3 - [Polygons](https://felipedeaujaques.github.io/30daysmapchallenge/Polygons/qgis2web/index.html)
+
+Country polygons simplified in QGIS
+
+| Data | Source |
+|---|---|
+| Country Polygons as GeoJSON | https://datahub.io/core/geo-countries/r/countries.geojson |
