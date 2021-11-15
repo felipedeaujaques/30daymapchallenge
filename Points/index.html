@@ -16,9 +16,10 @@
     		background-color:rgb(255, 255, 255);
 		}
 		.label {
-			font: 14px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
-			text-shadow:rgb(255, 255, 255);
+			font: 14px/1.5 "", Arial, Helvetica, sans-serif;
+			text-shadow:2px 2px 10px white;
 			z-Index: 999;
+			color: black;
 		}
 		html, body {
 			height: 100%;
@@ -70,7 +71,7 @@ function httpGet(url) {
 	L.geoJSON(JSON.parse(httpGet("https://raw.githubusercontent.com/frankfurt-gestalten/data/master/frankfurter_strassen.geojson")), {
     style: {
 		"color":"#000000",
-		"weight": 1
+		"weight": 0.2
 	}}).addTo(map);	
 
 	//districts
