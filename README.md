@@ -34,7 +34,7 @@ Exported OSM line geometries for bbox of central Frankfurt
 Overpass query:
 
 ```
-[out:json][timeout:25];
+[out:json];
 (
   way({{bbox}});
 );
@@ -50,3 +50,24 @@ Country polygons simplified in QGIS
 | Data | Source |
 |---|---|
 | Country Polygons as GeoJSON | https://datahub.io/core/geo-countries/r/countries.geojson |
+
+
+
+## 3 - [Hexagons](https://felipedeaujaques.github.io/30daysmapchallenge/Hexagons/index.html)
+
+Beehives that are mapped in OSM for Germany represented as H3 Hexbins
+
+| Data | Source |
+|---|---|
+| Beehive Locations | OSM data via https://overpass-turbo.eu/ |
+
+```
+[out:json];
+{{geocodeArea:Germany}}->.searchArea;
+(
+  node["man_made"="beehive"](area.searchArea);
+);
+out body;
+>;
+out skel qt;
+```
