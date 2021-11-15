@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<title>Beehives in Germany as H3 Hexbins</title>
+	<h1>OSM Mapped beehives in Germany represented as H3 Hexbins</h1>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+	<script src="https://unpkg.com/h3-js"></script>
+	<script id="input" src="./BeehivesGER.js"></script>
+ 
+	<style>
+		.leaflet-container {
+    		background-color:rgb(255, 255, 255);
+		}
+		.label {
+			color: white;
+			font: 14px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+			text-shadow:rgb(0, 0, 0);
+			font-weight: bold;
+			z-Index: 999;
+		}
+		html, body {
+			height: 100%;
+			margin: 0;
+		}
+		#map {
+			width: 800px;	
+			height: 600px;
+		}
+
+	</style>
+</head>
+<body>
+
+<div id='map'></div>
+
+<script>
+
+let map = L.map('map').setView([50.11, 8.6], 4);
+let lastLayer = null;
+
+function httpGet(url) {
+    let xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", url, false);
+    xmlHttp.send(null);
+    return xmlHttp.responseText;
+}
+
+function polygonize(geoboundary) {
+	let res = geoboundary;
+	res.push(geoboundary[0]);
+	return [res];
+}
+
+function getHexBins(resolution) {
+	let hexBins = {"type":"FeatureCollection", "features": []};
+
+	for (let it of beehives.features){
+		let index = h3.geoToH3(it.geometry.coordinates[0], it.geometry.coordinates[1], resolution);
+		if (hexBins.features.some(e => e.id === index)) {
+			(hexBins.features.find( e => e.id === index )).properties.hives++;	
+		} else {
+			let dummy = {
+			"type":"Feature",
+			"id": index,
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": polygonize(h3.h3ToGeoBoundary(index))
+			},
+			"properties": {
+				"hives":1
+			}};	
+			hexBins.features.push(dummy);
+		}
+	}
+	return hexBins;
+}
+
+function makeLayerAndAdd(resolution) {
+	console.log(resolution);
+	lastLayer = 
+	L.geoJSON(getHexBins(resolution), {
+    style: {
+		"color": "white",
+		"weight": 3,
+		"fillColor": "#c89f04",
+		"fillOpacity": .75,
+		"zIndex": 10
+	},
+	onEachFeature: function(feature, layer) {
+    let label = L.marker(layer.getBounds().getCenter(), {
+      icon: L.divIcon({
+        className: 'label',
+        html: feature.properties["hives"]
+	      })}).addTo(map);
+		}
+	}).addTo(map);
+}
+
+function removeLabels(){
+    const elements = document.getElementsByClassName("label");
+    while(elements.length > 0){
+        elements[0].parentNode.removeChild(elements[0]);
+    }
+}
+
+//data
+	//bundesländer
+	let bundeslaender = L.geoJSON(JSON.parse(httpGet("https://raw.githubusercontent.com/isellsoap/deutschlandGeoJSON/main/2_bundeslaender/2_hoch.geo.json")), {
+    style: {
+		"color": "#0e370b",
+		"fillColor": "#c3f2c0",
+		"weight": 0.5,
+		"fillOpacity": 0		
+	}}).addTo(map);	
+
+	makeLayerAndAdd(1);
+
+map.on('zoom', function(){
+	let z = map.getZoom();
+	if (z > 4 && z < 6 ) {
+		lastLayer.removeFrom(map);
+		removeLabels();
+		makeLayerAndAdd(2);
+		return;
+	}
+	if (z < 8 && z > 5) {
+		lastLayer.removeFrom(map);
+		removeLabels();
+		makeLayerAndAdd(3);
+		return;
+	}
+	if ( z < 9) {
+		lastLayer.removeFrom(map);
+		removeLabels();
+		makeLayerAndAdd(4);
+		return;
+    } 
+	if ( z < 11) {
+		lastLayer.removeFrom(map);
+		removeLabels();
+        makeLayerAndAdd(5);
+		return;
+    }
+});
+
+	let legend = L.control({position: 'bottomright'});
+
+	legend.onAdd = function (map) {
+
+    let div = L.DomUtil.create('div', 'info legend'),
+        grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+        labels = [];
+
+    // // loop through our density intervals and generate a label with a colored square for each interval
+    // for (var i = 0; i < grades.length; i++) {
+    //     div.innerHTML +=
+    //         '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+    //         grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+    // }
+
+    return div;
+};
+
+legend.addTo(map);
+
+
+</script>
+
+
+
+</body>
+</html>
