@@ -53,7 +53,7 @@ Country polygons simplified in QGIS
 
 
 
-## 3 - [Hexagons](https://felipedeaujaques.github.io/30daysmapchallenge/Hexagons/index.html)
+## 4 - [Hexagons](https://felipedeaujaques.github.io/30daysmapchallenge/Hexagons/index.html)
 
 Beehives that are mapped in OSM for Germany represented as H3 Hexbins
 
@@ -71,3 +71,11 @@ out body;
 >;
 out skel qt;
 ```
+
+## 5 - [OpenStreetMap](https://felipedeaujaques.github.io/30daysmapchallenge/OpenStreetMap/index.html)
+
+Same distance areas (Voronoi) of public toilets
+
+| Data | Source |
+|---|---|
+| Public Toilets | OSM data via https://export.hotosm.org/de/v3/ |
