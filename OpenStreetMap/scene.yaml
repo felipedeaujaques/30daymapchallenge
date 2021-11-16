@@ -11,9 +11,11 @@ layers:
       data: { source: toilets }
       draw:
           points:
+              order: 1
               color: '#ddeeee'
     voronoiLayer:
       data: { source: voronoi }
       draw:
           polygons:
+              order: 0
               color: '#aaffaa'
