@@ -1,0 +1,19 @@
+sources:
+    toilets:
+        type: GeoJSON
+        url: toi_ffm.geojson
+    voronoi:
+        type: GeoJSON
+        url: voronoi.geojson
+
+layers:
+    toiletsLayer:
+      data: { source: toilets }
+      draw:
+          points:
+              color: '#ddeeee'
+    voronoiLayer:
+      data: { source: voronoi }
+      draw:
+          polygons:
+              color: '#aaffaa'
