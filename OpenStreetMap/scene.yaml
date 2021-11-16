@@ -1,10 +1,10 @@
 sources:
     toilets:
         type: GeoJSON
-        url: toi_ffm.geojson
+        url: https://gist.githubusercontent.com/felipedeaujaques/348b9b70fcf9458b397f4f5a6b544abd/raw/dff6f017df4b721eaa54de7642665e6507ddc10d/toi_ffm.geojson
     voronoi:
         type: GeoJSON
-        url: voronoi.geojson
+        url: https://gist.githubusercontent.com/felipedeaujaques/bd474af81cdba1a4bbdc9e4ca6147b30/raw/6896ba95ed21a77fbb1e1937a12db8f518f3895e/voronoi.geojson
 
 layers:
     toiletsLayer:
