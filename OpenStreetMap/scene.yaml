@@ -12,7 +12,8 @@ layers:
       draw:
         points:
             order: 1
-            color: '#ddeeee'
+            size: 2px
+            color: '#fff'
     voronoiLayer:
       data: { source: voronoi }
       draw:
@@ -20,6 +21,6 @@ layers:
             order: 0
             color: '#aaffaa'
         lines:
-            order: 0
+            order: 1
             width: 1px
             color: '#000'
