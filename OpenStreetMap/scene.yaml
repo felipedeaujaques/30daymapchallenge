@@ -12,14 +12,28 @@ layers:
       draw:
         points:
             order: 1
-            size: 2px
-            color: '#fff'
+            size: 4px
+            color: '#000'
     voronoiLayer:
       data: { source: voronoi }
       draw:
         polygons:
             order: 0
-            color: '#aaffaa'
+            color: |
+                function() {
+                    if (feature.area < 10000) {
+                        return '#008000'
+                    }
+                    if (feature.area < 50000) {
+                        return '#FFFF99'
+                    }
+                    if (feature.area < 100000) {
+                        return '#FFA500'
+                    }
+                    if (feature.area >= 100000) {
+                        return '#FF4500'
+                    }
+                }
         lines:
             order: 1
             width: 1px
