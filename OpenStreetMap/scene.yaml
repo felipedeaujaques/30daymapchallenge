@@ -21,16 +21,16 @@ layers:
             order: 0
             color: |
                 function() {
-                    if (feature.area < 10000) {
+                    if (feature.area < 20000) {
                         return '#008000'
                     }
-                    if (feature.area < 50000) {
+                    if (feature.area < 100000) {
                         return '#FFFF99'
                     }
-                    if (feature.area < 100000) {
+                    if (feature.area < 150000) {
                         return '#FFA500'
                     }
-                    if (feature.area >= 100000) {
+                    if (feature.area >= 150000) {
                         return '#FF4500'
                     }
                 }
