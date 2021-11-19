@@ -30,7 +30,7 @@ layers:
                     if (feature.area < 500000) {
                         return '#FFA500'
                     }
-                    if (feature.area >= 1000000) {
+                    if (feature.area >= 500000) {
                         return '#FF4500'
                     }
                 }
