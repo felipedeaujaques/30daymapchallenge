@@ -61,7 +61,7 @@ function getHexBins(resolution) {
 	let hexBins = {"type":"FeatureCollection", "features": []};
 
 	for (let it of beehives.features){
-		let index = h3.geoToH3(it.geometry.coordinates[0], it.geometry.coordinates[1], resolution);
+		let index = h3.latLngToCell(it.geometry.coordinates[0], it.geometry.coordinates[1], resolution);
 		if (hexBins.features.some(e => e.id === index)) {
 			(hexBins.features.find( e => e.id === index )).properties.hives++;	
 		} else {
@@ -70,7 +70,7 @@ function getHexBins(resolution) {
 			"id": index,
 			"geometry": {
 				"type": "Polygon",
-				"coordinates": polygonize(h3.h3ToGeoBoundary(index))
+				"coordinates": polygonize(h3.cellToBoundary(index))
 			},
 			"properties": {
 				"hives":1

@@ -70,7 +70,7 @@ function httpGet(url) {
 	//streets
 	L.geoJSON(JSON.parse(httpGet("https://raw.githubusercontent.com/frankfurt-gestalten/data/master/frankfurter_strassen.geojson")), {
     style: {
-		"color":"#000000",
+		"color":"#808080",
 		"weight": 0.2
 	}}).addTo(map);	
 
@@ -93,19 +93,31 @@ function httpGet(url) {
 
 	dis.bringToFront();
 	
-	var legend = L.control({position: 'bottomright'});
+	let legend = L.control({position: 'bottomright'});
 
-	legend.onAdd = function (map) {
+legend.onAdd = function () {
 
-    var div = L.DomUtil.create('div', 'info legend'),
-        grades = [0, 10, 20, 50, 100, 200, 500, 1000],
-        labels = [];
+    let div = L.DomUtil.create('div', 'info legend'),
+        names = ["Street Network", "Table Tennis Locations", "City Districts"],
+        colorsOrIcon = ["#808080", "https://cdn-icons-png.flaticon.com/512/125/125252.png", "#000000"],
+		geometry = ["Line", "Point", "Line"];
 
     // loop through our density intervals and generate a label with a colored square for each interval
-    for (var i = 0; i < grades.length; i++) {
-        div.innerHTML +=
-            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+    for (let i = 0; i < names.length; i++) {
+		if (geometry[i] == "Line") {
+			div.innerHTML +=
+            '<br> <div style="background:' + colorsOrIcon[i] + '; width: 2px; height: 8px;">' +  names[i]+'</div>';
+		} else if (geometry[i] === "Point") {
+			if (colorsOrIcon[i].startsWith("https")) {
+				//use icon
+				div.innerHTML +=
+            '<br> <img style="width: 8px; height: 8px" src="' + colorsOrIcon[i] + '"></img>' + names[i];
+			} else {
+				div.innerHTML +=
+            '<br> <div style="background:' + colorsOrIcon[i] + '"></i> ' + names[i];
+			}
+		} 
+
     }
 
     return div;

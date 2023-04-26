@@ -5,17 +5,18 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://unpkg.com/tangram/dist/tangram.min.js"></script>
-
     <style>
         body {
             margin: 0px;
             border: 0px;
             padding: 0px;
         }
-
+        .leaflet-container {
+    		background-color:rgb(255, 255, 255);
+		    }  
         #map {
             height: 100%;
-            width: 100%;
+            width: 60%;
             position: absolute;
         }
 
@@ -23,6 +24,7 @@
   </head>
 
   <body>
+    <h1>Same distance areas (Voronoi) for osm-mapped toilets in Frankfurt </h>
     <div id="map"></div>
     <script>
 
@@ -35,7 +37,7 @@
 
         tangramLayer.addTo(map);
 
-        map.setView([50.1, 9.0], 10);
+        map.setView([50.1, 8.6], 12);
 
     </script>
 
