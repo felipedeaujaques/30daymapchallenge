@@ -2,12 +2,7 @@
 
 | Date       | Name                  | Description                                                                                                                                                                                                                                                                           |
 |------------|-----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 01-11-2024 | Points                | 30DayMapChallenge classic: A map with points. Start the challenge with points. Show individual locations—anything from cities to trees or more abstract concepts. Simple, but a key part of the challenge. 📍
-
-https://opendata.rmv.de/site/files/rmv01/RMV_Haltestellen_Tarifperiode_2023_24_Stand_2024-07-09.zip
-
-Tried out Felt, problem while uploading csv -> longitude and latitude used comma; Upload anything right :smile:
-                                    |
+| 01-11-2024 | Points                | 30DayMapChallenge classic: A map with points. Start the challenge with points. Show individual locations—anything from cities to trees or more abstract concepts. Simple, but a key part of the challenge. 📍 https://opendata.rmv.de/site/files/rmv01/RMV_Haltestellen_Tarifperiode_2023_24_Stand_2024-07-09.zip Tried out Felt, problem while uploading csv -> longitude and latitude used comma; Upload anything right :smile: |
 | 02-11-2024 | Lines                 | 30DayMapChallenge classic: A map with focus on lines. Roads, rivers, routes, or borders—this day is all about mapping connections and divisions. Another traditional way to keep things moving. 📏                                             |
 | 03-11-2024 | Polygons              | 30DayMapChallenge classic: A map with polygons. Regions, countries, lakes—this day is for defined shapes that fill space. 🛑                                                                                                                     |
 | 04-11-2024 | Hexagons              | Maps using hexagonal grids. Step away from square grids and try mapping with hexagons. A fun way to show density or spatial patterns. 🔷                                                                                                          |
