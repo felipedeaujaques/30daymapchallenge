@@ -7,7 +7,7 @@ def readFromOverture():
     con.load_extension("spatial")
     con.install_extension("httpfs")
     con.load_extension("httpfs")
-    duckdb.sql(
+    con.sql(
         f"COPY ( SELECT * FROM read_parquet('s3://overturemaps-us-west-2/release/2024-10-23.0/theme=transportation/type=segment/*', union_by_name = True) "
         f"WHERE bbox.xmin >= 8.527655 "
         f"AND bbox.ymin >= 50.068935 "
