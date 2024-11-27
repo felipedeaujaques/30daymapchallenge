@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map with Labeled Points, Lines, and Polygons</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 80vh;
+            width: 100%;
+        }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #023c06;
+            color: white;
+        }
+        .controls {
+            margin: 10px;
+            text-align: center;
+        }
+        button, select {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #023c06;
+            color: rgb(255, 255, 255);
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover, select:hover {
+            background-color: #023c06;
+        }
+        select {
+            margin-left: 10px;
+            background-color: #023c06;
+            color: white;
+        }
+        #clearAll {
+            background-color: red;
+            position: absolute;
+            right: 1%;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <label for="drawingMode">Choose Mode:</label>
+        <select id="drawingMode">
+            <option value="marker" selected="selected">Add Marker</option>
+            <option value="line">Draw Line</option>
+            <option value="polygon">Draw Polygon</option>
+        </select>
+        <button id="clearAll">Clear</button>
+    </div>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        const map = L.map('map').setView([50.11, 8.68], 14);
+
+        // Add tile layer
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 20
+        }).addTo(map);
+
+        // Initialize data
+        const savedData = JSON.parse(localStorage.getItem('mapData')) || { markers: [], shapes: [] };
+        const markerInstances = [];
+        const shapeInstances = [];
+        let tempMarkers = [];
+        let tempCoords = [];
+        let drawingMode = 'marker';
+
+        // Save data to localStorage
+        const saveDataToLocalStorage = () => {
+            localStorage.setItem('mapData', JSON.stringify(savedData));
+        };
+
+        // Restore saved markers
+        savedData.markers.forEach(marker => {
+            const markerInstance = L.circleMarker(marker.coords, {
+                radius: 8,
+                fillColor: "green",
+                color: "white",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8
+            }).addTo(map);
+            if (marker.text) {
+                markerInstance.bindPopup(marker.text).openPopup();
+            }
+            markerInstances.push(markerInstance);
+        });
+
+        // Restore saved shapes
+        savedData.shapes.forEach(shape => {
+            let shapeInstance;
+            if (shape.type === 'line') {
+                shapeInstance = L.polyline(shape.coords, { color: 'blue' }).addTo(map);
+            } else if (shape.type === 'polygon') {
+                shapeInstance = L.polygon(shape.coords, { color: 'green' }).addTo(map);
+            }
+            if (shape.text) {shapeInstance.bindPopup(shape.text).openPopup();}
+            shapeInstances.push(shapeInstance);
+        });
+
+        // Handle mode change
+        document.getElementById('drawingMode').addEventListener('change', (e) => {
+            drawingMode = e.target.value;
+            tempMarkers.forEach(marker => marker.remove());
+            tempMarkers = [];
+        });
+
+        // Map click handler
+        map.on('click', function (e) {
+            const { lat, lng } = e.latlng;
+
+            if (drawingMode === 'marker') {
+                const text = prompt("Enter text for this marker:", "");
+                if (text !== null) {
+                    const markerInstance = L.circleMarker([lat, lng], {
+                        radius: 8,
+                        fillColor: "green",
+                        color: "white",
+                        weight: 1,
+                        opacity: 1,
+                        fillOpacity: 0.8
+                    }).addTo(map);
+                    if (text.trim() !== "") {
+                        markerInstance.bindPopup(text).openPopup();
+                    }
+                    savedData.markers.push({ coords: [lat, lng], text });
+                    markerInstances.push(markerInstance);
+                    saveDataToLocalStorage();
+                }
+            } else if (drawingMode === 'line' || drawingMode === 'polygon') {
+                tempCoords.push([lat, lng]);
+                const tempMarker = L.circleMarker([lat, lng], {
+                    radius: 5,
+                    fillColor: "gray",
+                    color: "gray",
+                    weight: 1,
+                    opacity: 0.5,
+                    fillOpacity: 0.5
+                }).addTo(map);
+                tempMarkers.push(tempMarker);
+            }
+        });
+
+        // Map double-click handler to finalize shapes
+        map.on('dblclick', function () {
+            if ((drawingMode === 'line' && tempCoords.length > 1) ||
+                (drawingMode === 'polygon' && tempCoords.length > 2)) {
+
+                let shapeInstance;
+                const text = prompt("Enter text for this marker:", "");
+                const shapeData = { type: drawingMode, coords: [...tempCoords], text: text};
+
+                if (drawingMode === 'line') {
+                    shapeInstance = L.polyline(tempCoords, { color: 'blue' }).addTo(map);
+                } else if (drawingMode === 'polygon') {
+                    shapeInstance = L.polygon(tempCoords, { color: 'green' }).addTo(map);
+                }
+                if (text) {shapeInstance.bindPopup(text).openPopup();}
+                savedData.shapes.push(shapeData);
+                shapeInstances.push(shapeInstance);
+
+                // Clear temporary points
+                tempMarkers.forEach(marker => marker.remove());
+                tempMarkers = [];
+                tempCoords = [];
+                saveDataToLocalStorage();
+            }
+        });
+
+        // Clear all data
+        document.getElementById('clearAll').addEventListener('click', () => {
+            markerInstances.forEach(marker => marker.remove());
+            shapeInstances.forEach(shape => shape.remove());
+            markerInstances.length = 0;
+            shapeInstances.length = 0;
+            savedData.markers = [];
+            savedData.shapes = [];
+            tempMarkers.forEach(marker => marker.remove());
+            tempMarkers = [];
+            tempCoords = [];
+            localStorage.removeItem('mapData');
+            alert('All data has been cleared!');
+        });
+    </script>
+</body>
+</html>
